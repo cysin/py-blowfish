@@ -109,6 +109,7 @@ static PyObject *
 py_encrypt(PyObject *self, PyObject *args)
 {
     PyCObject *key;
+    PyObject *ret;
     char *data;
     int data_len;
     BLOWFISH_CTX * ctx;
@@ -121,13 +122,16 @@ py_encrypt(PyObject *self, PyObject *args)
     ctx = (BLOWFISH_CTX *)PyCObject_AsVoidPtr(key);
     bf_encrypt(ctx, data_copy, &data_len);
     
-    return PyString_FromStringAndSize(data_copy, data_len);
+    ret = PyString_FromStringAndSize(data_copy, data_len);
+    free(data_copy);
+    return ret;
 }
 
 static PyObject *
 py_decrypt(PyObject *self, PyObject *args)
 {
     PyCObject *key;
+    PyObject *ret;
     char *data;
     int data_len;
     BLOWFISH_CTX * ctx;
@@ -140,7 +144,9 @@ py_decrypt(PyObject *self, PyObject *args)
     ctx = (BLOWFISH_CTX *)PyCObject_AsVoidPtr(key);
     bf_decrypt(ctx, data_copy, &data_len);
     
-    return PyString_FromStringAndSize(data_copy, data_len);
+    ret = PyString_FromStringAndSize(data_copy, data_len);
+    free(data_copy);
+    return ret;
 }
 
 /**
